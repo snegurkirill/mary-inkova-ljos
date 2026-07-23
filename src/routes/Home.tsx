@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import LensSphere from '../components/LensSphere/LensSphere'
+import { asset } from '../lib/asset'
 import styles from './Home.module.css'
 
 /**
@@ -45,7 +46,7 @@ export default function Home() {
             это
           </p>
           <div className={styles.circle} style={{ '--i': 0 } as React.CSSProperties}>
-            <LensSphere src="/content/home/lens.jpg" />
+            <LensSphere src={asset('/content/home/lens.jpg')} />
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 import type { Project } from './types'
+import { asset } from '../lib/asset'
 
 /**
  * DEMO content — wired to the images currently in the repo so every page is
@@ -6,7 +7,7 @@ import type { Project } from './types'
  * this file from a GitHub-based CMS later). Titles kept mixed EN/RU as authored.
  */
 
-const W = (n: number) => `/content/works/${n}.png`
+const W = (n: number) => asset(`/content/works/${n}.png`)
 
 const glowingFlowersArtworks = [
   { id: '1', title: 'Хлеборус и 4 лепестка', image: W(1), technique: 'Фотография, lumen print', size: '30 х 40', price: '15 000 ₽', medium: 'Photo' as const },
