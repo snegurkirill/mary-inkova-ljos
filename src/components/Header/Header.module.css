@@ -1,0 +1,127 @@
+.header {
+  position: fixed;
+  top: var(--header-top);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-bg);
+  text-align: center;
+}
+
+/* On Home, the header is step 0 of the line-by-line reveal. */
+@keyframes headerReveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.reveal {
+  animation: headerReveal var(--reveal-dur) ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
+}
+
+.wordmark {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 0;
+}
+
+.wordmark img {
+  width: 245px;
+  height: 32px;
+}
+
+/* Top-level navigation row: проекты · об авторе */
+.nav {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.154px;
+}
+
+.navActive {
+  color: var(--color-black);
+}
+
+.navMuted {
+  color: var(--color-ink);
+  opacity: 0.3;
+}
+
+.navMuted:hover {
+  opacity: 0.6;
+}
+
+/* Welcoming state: both labels unselected but clearly inviting. */
+.navWelcome {
+  color: var(--color-ink);
+  opacity: 0.7;
+}
+
+.navWelcome:hover {
+  opacity: 1;
+}
+
+/* The welcoming nav fades in gently once the intro reveal completes. */
+.navEnter {
+  animation: navFadeIn 0.5s ease-out both;
+}
+
+@keyframes navFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navEnter {
+    animation: none;
+  }
+}
+
+/* Contextual crumb rows (project / artwork) */
+.crumb {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: -0.154px;
+}
+
+.crumbInk {
+  color: var(--color-ink);
+}
+
+.crumbSub {
+  color: var(--color-muted);
+}
+
+.params {
+  display: flex;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(105, 95, 95, 0.5);
+}

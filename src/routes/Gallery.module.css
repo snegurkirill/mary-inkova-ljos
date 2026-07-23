@@ -1,0 +1,6 @@
+/* Scrollable page; showcase starts below the fixed header, full-bleed width. */
+.page {
+  padding-top: 139px;
+  padding-bottom: var(--page-margin);
+  min-height: 100dvh;
+}

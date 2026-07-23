@@ -1,0 +1,76 @@
+:root {
+  /* Spacing */
+  --page-margin: 32px;
+  --gap: 10px;
+  --header-top: 32px;
+
+  /* Home line-by-line reveal: each line fades in over --reveal-dur,
+     staggered by --reveal-step (index * step). */
+  --reveal-dur: 1s;
+  --reveal-step: 0.5s;
+
+  /* Colors (from Figma Development page) */
+  --color-bg: #ffffff;
+  --color-ink: #1a438f; /* deep blue — brand / primary text */
+  --color-black: #000000;
+  --color-muted: #695f5f; /* warm gray — secondary text */
+
+  /* Type */
+  --font-serif: Georgia, 'Times New Roman', 'Times', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial,
+    sans-serif;
+
+  font-family: var(--font-sans);
+  color: var(--color-black);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+}
+
+body {
+  background: var(--color-bg);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Gentle 0.5s crossfade between main pages (View Transitions API).
+   Enabled per-navigation via `viewTransition` on main-page links only, so
+   artwork/slider navigations stay instant. Degrades to instant where the API
+   is unsupported. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

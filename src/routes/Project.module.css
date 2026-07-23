@@ -1,0 +1,6 @@
+/* Scrollable; content clears the (taller) project header. Full-bleed width. */
+.page {
+  padding-top: 150px;
+  padding-bottom: var(--page-margin);
+  min-height: 100dvh;
+}

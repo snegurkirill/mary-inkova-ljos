@@ -1,0 +1,107 @@
+.page {
+  position: relative;
+  min-height: 100dvh;
+  cursor: pointer;
+}
+
+/* Fixed 393px composition, centred in the viewport. */
+.sphere {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 393px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.row1 {
+  position: relative;
+  height: 48px;
+  width: 100%;
+}
+.row2 {
+  position: relative;
+  height: 417px;
+  width: 100%;
+}
+.row3 {
+  position: relative;
+  height: 30px;
+  width: 100%;
+}
+.row4 {
+  position: relative;
+  height: 42px;
+  width: 100%;
+}
+
+/* Line-by-line reveal: fade opacity 0→100 over --reveal-dur, staggered by
+   index (--i) * --reveal-step. */
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Poem fragments */
+.p {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.176px;
+  color: var(--color-ink);
+  white-space: nowrap;
+  opacity: 0;
+  animation: reveal var(--reveal-dur) ease-out both;
+  animation-delay: calc(var(--i, 0) * var(--reveal-step));
+}
+
+/* The iridescent sphere: a 393px circle cropped from the source image. */
+.circle {
+  position: absolute;
+  left: 0;
+  top: calc(50% + 12px);
+  transform: translateY(-50%);
+  width: 393px;
+  height: 393px;
+  border-radius: 50%;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  animation: reveal var(--reveal-dur) ease-out both;
+  animation-delay: calc(var(--i, 0) * var(--reveal-step));
+}
+
+.circleImg {
+  position: absolute;
+  max-width: none;
+  width: 267.35%;
+  height: 580.25%;
+  left: -110.2%;
+  top: -304.41%;
+}
+
+/* On very short viewports, let the page scroll instead of clipping. */
+@media (max-height: 720px) {
+  .page {
+    min-height: 760px;
+  }
+}
+
+/* Reduced motion: show everything immediately, no fade. */
+@media (prefers-reduced-motion: reduce) {
+  .p,
+  .circle {
+    opacity: 1;
+    animation: none;
+  }
+}
