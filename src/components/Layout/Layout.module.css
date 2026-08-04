@@ -1,11 +1,44 @@
+/* Desktop: fixed-height shell — Navigation stays put (not scrollable),
+   Content scrolls on its own. */
 .shell {
-  min-height: 100dvh;
   display: flex;
-  flex-direction: column;
+  align-items: stretch;
+  height: 100dvh;
+  overflow: hidden;
 }
 
-/* Header is fixed with 32px above; main content clears it. */
-.main {
-  flex: 1;
-  width: 100%;
+.content {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100dvh;
+  overflow-y: auto;
+}
+
+/* Mobile (dynamic): stack, normal page scroll. */
+.shell.mobile {
+  flex-direction: column;
+  height: auto;
+  overflow: visible;
+}
+.shell.mobile .content {
+  height: auto;
+  overflow: visible;
+}
+
+/* Fit-to-viewport (Work page): everything on one screen, no scroll — the
+   content (image) adapts its size. Works in both side-by-side and stacked. */
+.shell.fit {
+  height: 100dvh;
+  overflow: hidden;
+}
+.shell.fit .content {
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.shell.fit.mobile {
+  height: 100dvh;
+}
+.shell.fit.mobile .content {
+  flex: 1 1 0;
 }

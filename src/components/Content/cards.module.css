@@ -1,0 +1,132 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  color: inherit;
+}
+
+/* Gallery cover 4:3-ish */
+.cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1280 / 925;
+  overflow: hidden;
+}
+.cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.label {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  height: 17px;
+  padding: 0 12px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  white-space: nowrap;
+}
+.name {
+  color: var(--color-muted);
+}
+.year {
+  color: rgba(105, 95, 95, 0.5);
+}
+
+/* Artwork card 3:4 image + name */
+.artImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 652 / 923;
+  overflow: hidden;
+}
+.artImage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.artName {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  letter-spacing: -0.176px;
+  color: var(--color-muted);
+}
+
+/* Works/Project card: image + name are one unit inside .artImage. The name is
+   overlaid, flush in the bottom-left corner, invisible until hover. On hover
+   the image insets by exactly --work-hover-inset px on *every* side — a plain
+   `inset` change, uniform on all 4 sides, so it can only ever shrink toward
+   the centre, never shift — which reveals its own corner for the name to sit
+   in. Size is set per-usage via --work-desc-size (WorkCard's descriptionSize
+   prop) and --work-hover-inset (hoverShrink prop, in px). */
+.artImageFrame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transition: inset 0.2s ease;
+}
+.artImageFrame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.workCard:hover .artImageFrame {
+  inset: var(--work-hover-inset, 0px);
+}
+.workDesc {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: var(--work-desc-size, 10px);
+  /* line-height:1 keeps the text's own height equal to its font-size, so it
+     fits inside the revealed inset strip without overlapping the image
+     (e.g. 12px text in a 12px-revealed strip). */
+  line-height: 1;
+  letter-spacing: calc(var(--work-desc-size, 10px) * -0.011);
+  color: var(--color-muted);
+  opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    left 0.2s ease;
+}
+/* hoverReveal={false} (WorkCard prop, e.g. the Works page): show the name
+   always, with no hover interaction at all. */
+.workDescStatic .workDesc {
+  opacity: 1;
+  transition: none;
+}
+/* On hover the image's left edge moves in by --work-hover-inset; shift the
+   name by the same amount so it stays flush with that new corner. */
+.workCard:hover .workDesc {
+  left: var(--work-hover-inset, 0px);
+}
+.workCard:hover .workDesc {
+  opacity: 1;
+}
+
+/* Portrait photo 2:3 */
+.photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 616 / 924;
+  overflow: hidden;
+}
+.photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

@@ -41,6 +41,13 @@ export function getProject(slug: string): Project | undefined {
   return projects.find((p) => p.slug === slug)
 }
 
+/** Flat list of every artwork across projects — for the «работы» page. */
+export function allArtworks() {
+  return projects.flatMap((p) =>
+    p.artworks.map((a) => ({ ...a, projectSlug: p.slug })),
+  )
+}
+
 export function getArtwork(slug: string, artworkId: string) {
   const project = getProject(slug)
   const index = project?.artworks.findIndex((a) => a.id === artworkId) ?? -1

@@ -1,0 +1,14 @@
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cell {
+  min-width: 0;
+  flex-grow: 0;
+  flex-shrink: 0;
+}

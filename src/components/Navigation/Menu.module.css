@@ -1,0 +1,47 @@
+.menu {
+  display: flex;
+  align-items: center; /* centre line = logo line */
+  gap: 20px;
+  font-family: var(--font-sans);
+}
+
+.list {
+  align-self: center;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  white-space: nowrap;
+}
+
+/* One continuous gray→blue gradient across the whole menu: each item shows its
+   slice of a full-width gradient (offsets set in Menu.tsx via --gw / --gx). */
+.item {
+  display: block;
+  background-image: linear-gradient(90deg, #695f5f, #1a438f);
+  background-size: var(--gw, 100%) 100%;
+  background-position: var(--gx, 0px) 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  transition: opacity 0.2s ease;
+}
+
+.item:hover {
+  opacity: 1 !important;
+}
+
+/* Collapsed (mobile header / Work page): selected items in a horizontal
+   row, one after another, 4px apart. */
+.collapsed {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+
