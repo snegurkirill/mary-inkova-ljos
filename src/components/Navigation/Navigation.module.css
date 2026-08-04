@@ -1,0 +1,198 @@
+.module {
+  position: relative;
+  min-height: 100dvh;
+  padding: 10px;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+}
+
+/* Desktop: header absolutely centred → logotype at the middle of the display.
+   Info-text pinned to the bottom. */
+.header {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  width: 115px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+
+.info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: -0.154px;
+  color: var(--color-muted);
+  opacity: 0.7;
+  text-align: justify;
+  white-space: pre-wrap;
+}
+
+/* Hidden measurer — laid out (for width) but not visible. */
+.measurer {
+  position: absolute;
+  left: -99999px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Mobile: full width, pinned to top, white, stays while scrolling.
+   overflow-anchor:none stops the browser's scroll-anchoring from nudging
+   scrollY to compensate for this sticky element's own height changes (the
+   Info-text collapse/expand below) — without it, those nudges fire spurious
+   'scroll' events that immediately re-close the just-opened panel. */
+.mobileModule {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  min-height: 0;
+  background: var(--color-bg);
+  overflow-anchor: none;
+}
+
+.mobileHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+.mobileHeader .info {
+  position: static;
+  margin-top: 0;
+}
+
+/* Logotype as the mobile menu-overlay toggle. */
+.logoBtn {
+  display: block;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+/* Full-menu overlay: a genuine full-screen takeover (not a dropdown), so all
+   of its content — logo + full menu columns — has the whole viewport to lay
+   out in. Hidden (not just invisible) when closed so it never intercepts
+   taps. The backdrop is a simple full-bleed base beneath the panel (no
+   content is visible behind it, since the panel itself is full screen); it
+   still doubles as a tap-to-close target below the panel's own content. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  visibility: hidden;
+  pointer-events: none;
+}
+.overlay[data-open='true'] {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.overlayBackdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: none;
+  padding: 0;
+  background: var(--color-bg);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.overlay[data-open='true'] .overlayBackdrop {
+  opacity: 1;
+}
+
+/* Self-contained: carries its own logo (also the close button) so it doesn't
+   depend on the real header's height, which varies (Info-text expanded/
+   collapsed/absent). Fills the entire viewport. */
+.overlayPanel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  height: 100dvh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 10px;
+  background: var(--color-bg);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.overlay[data-open='true'] .overlayPanel {
+  opacity: 1;
+}
+
+/* Breadcrumb line with the «о проекте» button opposite it (left) on the Project
+   mobile header. */
+.menuRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.infoBtn {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  letter-spacing: -0.154px;
+  color: var(--color-muted);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.infoBtn[data-visible='true'] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Smooth collapse: grid rows animate to the content's height. */
+.infoWrap {
+  display: grid;
+  grid-template-rows: 1fr;
+  width: 100%;
+  opacity: 1;
+  overflow-anchor: none;
+  transition:
+    grid-template-rows 0.35s ease,
+    opacity 0.3s ease,
+    margin-top 0.35s ease;
+}
+.infoWrap[data-open='false'] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: -12px; /* absorb the mobileHeader row gap when collapsed */
+}
+.infoWrap > .info {
+  overflow: hidden;
+  min-height: 0;
+  margin: 0;
+}

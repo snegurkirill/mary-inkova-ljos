@@ -1,73 +1,48 @@
+import { useLayoutEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LensSphere from '../components/LensSphere/LensSphere'
+import { useLayout } from '../components/Layout/LayoutContext'
 import { asset } from '../lib/asset'
 import styles from './Home.module.css'
 
+const POEM =
+  'Есть место — оно парит выше звёзд, это мой дом, он наполнен проникающим светом'
+
 /**
- * Home — expanded (fits viewport). A centred iridescent sphere with the poem
- * arranged around it. Composition is a fixed 393px column, centred in the
- * viewport (so it reads the same on desktop and mobile).
- *
- * On load the content reveals line by line: each element fades opacity 0→100
- * over 1s. The header and the sphere image share step 0 (fade in together);
- * the poem lines then follow one after another with a 1s stagger (--i = 1..7).
- * The header animation lives in Header.tsx. `--reveal-step` is the interval.
- *
- * Poem: «Есть место — оно парит выше звёзд, это мой дом,
- *        он наполнен проникающим светом.»
+ * Home. Desktop: the message (poem) shows in full on the right; the preview
+ * sphere between the Navigation and the message expands/shrinks to fit. Once
+ * the sphere would be narrower than 320px we go mobile (reported to Layout):
+ * header on top, sphere in the middle, message at the bottom (42px up).
+ * Clicking the sphere image opens the Gallery.
  */
+const POEM_WIDTH = 320
+const SPHERE_MIN = 320
+const GAP = 40
+
 export default function Home() {
+  const { isMobile, setMinContent } = useLayout()
   const navigate = useNavigate()
-  // The whole surface is an "enter" gesture → Gallery. The one exception,
-  // «об авторе», lives in the Header (a separate fixed element), so its click
-  // never reaches here.
-  const enterGallery = () => navigate('/gallery', { viewTransition: true })
+
+  useLayoutEffect(() => {
+    setMinContent(SPHERE_MIN + GAP + POEM_WIDTH)
+  }, [setMinContent])
 
   return (
     <section
-      className={styles.page}
+      className={`${styles.page} ${isMobile ? styles.mobile : ''}`}
       data-page="home"
-      onClick={enterGallery}
-      role="link"
-      aria-label="Enter — проекты"
     >
-      <div className={styles.sphere}>
-        <div className={styles.row1}>
-          <p className={styles.p} style={{ left: 33, top: 0, '--i': 1 } as React.CSSProperties}>
-            Есть место
-          </p>
-          <p className={styles.p} style={{ left: 124, top: 24, '--i': 2 } as React.CSSProperties}>
-            — оно парит выше звёзд
-          </p>
+      <button
+        type="button"
+        className={styles.sphere}
+        onClick={() => navigate('/gallery', { viewTransition: true })}
+        aria-label="Open gallery"
+      >
+        <div className={styles.sphereInner}>
+          <LensSphere src={asset('/content/home/lens.jpg')} />
         </div>
-
-        <div className={styles.row2}>
-          <p className={styles.p} style={{ left: 65, top: 0, '--i': 3 } as React.CSSProperties}>
-            это
-          </p>
-          <div className={styles.circle} style={{ '--i': 0 } as React.CSSProperties}>
-            <LensSphere src={asset('/content/home/lens.jpg')} />
-          </div>
-        </div>
-
-        <div className={styles.row3}>
-          <p className={styles.p} style={{ left: 264, top: -12, '--i': 4 } as React.CSSProperties}>
-            мой
-          </p>
-          <p className={styles.p} style={{ left: 64, top: 6, '--i': 5 } as React.CSSProperties}>
-            дом
-          </p>
-        </div>
-
-        <div className={styles.row4}>
-          <p className={styles.p} style={{ left: 251, top: 0, '--i': 6 } as React.CSSProperties}>
-            он наполнен
-          </p>
-          <p className={styles.p} style={{ left: 113, top: 18, '--i': 7 } as React.CSSProperties}>
-            проникающим светом
-          </p>
-        </div>
-      </div>
+      </button>
+      <p className={styles.poem}>{POEM}</p>
     </section>
   )
 }
