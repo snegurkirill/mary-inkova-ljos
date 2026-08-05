@@ -39,7 +39,7 @@ export default function Home() {
         aria-label="Open gallery"
       >
         <div className={styles.sphereInner}>
-          <LensSphere src={asset('/content/home/lens.jpg')} />
+          <LensSphere src={asset('/content/home/lens.mp4')} />
         </div>
       </button>
       <p className={styles.poem}>{POEM}</p>

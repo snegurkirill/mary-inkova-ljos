@@ -1,24 +1,37 @@
-/* Sits as a sibling of the real <img> inside the same position:relative,
-   overflow:hidden box — an exact copy of the same image, gradient-mapped,
-   faded in only while the page is scrolling (data-scrolling on <html>,
-   toggled by useScrollFilterState). */
+/* Persistent, cheap wrapper — always present (it's the IntersectionObserver
+   target) but carries no cost of its own; sits as a sibling of the real
+   <img> inside the same position:relative, overflow:hidden box. */
 .overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* The actual filtered copy — an exact duplicate of the same image,
+   gradient-mapped, faded in only while the page is scrolling (data-scrolling
+   on <html>, toggled by useScrollFilterState). Only mounted (see
+   GradientFilterOverlay.tsx) while near the viewport, since the SVG filter is
+   expensive to rasterize and this box existing is what triggers that.
+   will-change promotes it to its own compositor layer so the browser caches
+   the filtered bitmap and just cross-fades it, instead of re-rasterizing the
+   filter on every opacity tick. */
+.overlayImage {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
   filter: url(#gradient-map-blue);
   opacity: 0;
-  pointer-events: none;
+  will-change: opacity;
   transition: opacity 0.5s ease;
 }
 
-:global(html[data-scrolling='true']) .overlay {
+:global(html[data-scrolling='true']) .overlayImage {
   opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .overlay {
+  .overlayImage {
     display: none;
   }
 }

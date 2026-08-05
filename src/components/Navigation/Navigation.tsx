@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import wordmark from '../../assets/wordmark.svg'
 import { buildColumns } from '../../data/menu'
 import { getProject } from '../../data/projects'
@@ -47,40 +47,18 @@ export default function Navigation({
   const measureRef = useRef<HTMLDivElement>(null)
   const [w, setW] = useState<number>()
 
-  // Mobile Info-text collapse: full at the top, collapses to a button after
-  // even a tiny scroll down. Any further scroll also closes it again even if
-  // it was reopened via the button.
-  //
-  // Uses hysteresis (two different thresholds) instead of one: a small scroll
-  // down (past CLOSE_AT) closes it, but it only re-opens automatically once
-  // scrolled essentially all the way back to the top (past OPEN_AT, ~0). A
-  // single shared threshold would flap open/closed on the natural jitter of a
-  // hesitant/slow scroll gesture hovering right around that value.
-  const CLOSE_AT = 8
-  const OPEN_AT = 2
-  const [scrolled, setScrolled] = useState(false)
+  // Mobile Info-text: collapsed by default (an «о проекте» toggle), since
+  // it's an overlay and — open — sits on top of the content below rather
+  // than pushing it down. Opens only on tap; any scroll closes it again.
   const [open, setOpen] = useState(false)
   useEffect(() => {
-    setScrolled(false)
     setOpen(false)
     if (!isMobile || !info) return
-    let closed = false
-    const onScroll = () => {
-      const y = window.scrollY
-      if (!closed && y > CLOSE_AT) {
-        closed = true
-        setScrolled(true)
-      } else if (closed && y <= OPEN_AT) {
-        closed = false
-        setScrolled(false)
-      }
-      setOpen(false)
-    }
-    onScroll()
+    const onScroll = () => setOpen(false)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [isMobile, info, pathname])
-  const infoOpen = !scrolled || open
+  const infoOpen = open
 
   // Mobile menu overlay: tapping the logotype toggles it; navigating away
   // (pathname change) or leaving mobile always closes it.
@@ -108,8 +86,8 @@ export default function Navigation({
       className={styles.logo}
       src={wordmark}
       alt="Mary Inkova Ljós"
-      width={245}
-      height={32}
+      width={208}
+      height={31}
     />
   )
 
@@ -148,12 +126,24 @@ export default function Navigation({
                 <button
                   type="button"
                   className={styles.infoBtn}
-                  data-visible={scrolled}
                   aria-expanded={infoOpen}
                   onClick={() => setOpen((o) => !o)}
                 >
                   о проекте
                 </button>
+              </div>
+            ) : columns.length === 1 ? (
+              // First-stage pages (Works, Portraits, Collaboration, About):
+              // the breadcrumb is just the current page, so tapping it opens
+              // the menu overlay instead of self-navigating.
+              <div
+                className={styles.menuTapArea}
+                onClick={(e) => {
+                  e.preventDefault()
+                  setMenuOpen((o) => !o)
+                }}
+              >
+                <Menu columns={columns} pathname={pathname} collapsed />
               </div>
             ) : (
               <Menu columns={columns} pathname={pathname} collapsed />
@@ -187,7 +177,9 @@ export default function Navigation({
               }}
             >
               {mobileLogo}
-              <Menu columns={columns.slice(0, 2)} pathname={pathname} />
+              <div className={styles.overlayMenuArea}>
+                <Menu columns={columns.slice(0, 2)} pathname={pathname} />
+              </div>
             </div>
           </div>
         </>
@@ -197,7 +189,9 @@ export default function Navigation({
               vertical middle of the display, whatever the menu depth.
               The Work page uses the collapsed (breadcrumb) menu here. */}
           <div className={styles.header}>
-            {logo}
+            <Link to="/" viewTransition className={styles.logoLink}>
+              {logo}
+            </Link>
             <Menu
               columns={columns}
               pathname={pathname}
