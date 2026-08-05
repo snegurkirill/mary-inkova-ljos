@@ -12,6 +12,12 @@
   min-width: 0;
   height: 100dvh;
   overflow-y: auto;
+  /* Scrolls (overflow-y: auto above) without showing its own scrollbar. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.content::-webkit-scrollbar {
+  display: none;
 }
 
 /* Mobile (dynamic): stack, normal page scroll. */

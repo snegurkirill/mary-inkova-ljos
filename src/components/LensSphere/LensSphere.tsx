@@ -3,14 +3,18 @@ import { useEffect, useRef } from 'react'
 /**
  * Animated glossy glass-lens sphere, drawn live with a WebGL fragment shader.
  *
- * A circular lens sits over `src` (e.g. the candle+flower artwork): the view is
- * magnified and refracted, distorts toward the rim, sways gently like looking
- * through a peephole, the blue/warm rim shimmers as it rotates, and a soft warm
- * glow flickers over the candle flame. Everything outside the circle is
- * transparent so the white page shows through.
+ * A circular lens sits over `src` (a still image, or a video — detected by
+ * file extension; e.g. the candle+flower artwork, or her filmed in motion):
+ * the view is magnified and refracted, distorts toward the rim, sways gently
+ * like looking through a peephole, the blue/warm rim shimmers as it rotates,
+ * and a soft warm glow flickers over the candle flame. Everything outside
+ * the circle is transparent so the white page shows through. When `src` is a
+ * video it plays on loop, muted, and its current frame is what's sampled
+ * every draw — the sway/refraction/shimmer are the same shader math either
+ * way, just fed a moving picture instead of a static one.
  *
- * Freezes motion under prefers-reduced-motion; renders nothing (transparent)
- * if WebGL is unavailable.
+ * Freezes motion under prefers-reduced-motion (a video source is paused
+ * too); renders nothing (transparent) if WebGL is unavailable.
  *
  * `flame` optionally adds a gentle warm flicker glow at that position in the
  * source image, in 0..1 cover-space (x from left, y from top). Omit it to turn
@@ -22,6 +26,8 @@ type Props = {
   flame?: [number, number]
   className?: string
 }
+
+const isVideoSrc = (src: string) => /\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(src)
 
 const VERT = `
 attribute vec2 a_pos;
@@ -166,14 +172,40 @@ export default function LensSphere({ src, flame, className }: Props) {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
 
     let aspect = 1
-    const img = new Image()
-    img.onload = () => {
-      aspect = img.naturalWidth / img.naturalHeight
-      gl.bindTexture(gl.TEXTURE_2D, tex)
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1)
+
+    // Under reduced-motion the rAF loop below only ever runs once (the very
+    // first, synchronous call) — before the image has decoded or the video
+    // has a frame ready, so it'd otherwise draw the 1x1 gray placeholder
+    // forever. draw() is re-invoked once loading actually completes so a
+    // real (single, still) frame shows even with motion frozen.
+    const isVideo = isVideoSrc(src)
+    let video: HTMLVideoElement | null = null
+    if (isVideo) {
+      video = document.createElement('video')
+      video.src = src
+      video.muted = true
+      video.loop = true
+      video.playsInline = true
+      video.autoplay = true
+      video.addEventListener('loadedmetadata', () => {
+        aspect = video!.videoWidth / video!.videoHeight
+      })
+      if (reduced) {
+        video.addEventListener('loadeddata', () => draw(), { once: true })
+      } else {
+        video.play().catch(() => {})
+      }
+    } else {
+      const img = new Image()
+      img.onload = () => {
+        aspect = img.naturalWidth / img.naturalHeight
+        gl.bindTexture(gl.TEXTURE_2D, tex)
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img)
+        if (reduced) draw()
+      }
+      img.src = src
     }
-    img.src = src
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -190,6 +222,10 @@ export default function LensSphere({ src, flame, className }: Props) {
     const start = performance.now()
     const draw = () => {
       resize()
+      if (video && video.readyState >= video.HAVE_CURRENT_DATA) {
+        gl.bindTexture(gl.TEXTURE_2D, tex)
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video)
+      }
       gl.uniform1f(uAspect, aspect)
       gl.uniform1f(uTime, (performance.now() - start) / 1000)
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
@@ -199,6 +235,11 @@ export default function LensSphere({ src, flame, className }: Props) {
 
     return () => {
       if (raf) cancelAnimationFrame(raf)
+      if (video) {
+        video.pause()
+        video.removeAttribute('src')
+        video.load()
+      }
       gl.deleteProgram(prog)
       gl.deleteBuffer(buf)
       gl.deleteTexture(tex)

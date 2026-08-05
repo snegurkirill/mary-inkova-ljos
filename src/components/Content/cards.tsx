@@ -4,7 +4,9 @@ import GradientFilterOverlay from '../GradientFilter/GradientFilterOverlay'
 import type { Project, Artwork } from '../../data/types'
 import styles from './cards.module.css'
 
-/** Gallery project card: 4:3 cover + name + year (unchanged from v1). */
+/** Gallery project card: 4:3 cover + name below it, flush to the left edge —
+ *  same typographic treatment as WorkCard's name, just outside the image
+ *  instead of overlaid on it (no year — a single line, always visible). */
 export function ProjectCard({ project }: { project: Project }) {
   return (
     <Link to={`/project/${project.slug}`} viewTransition className={styles.card}>
@@ -12,10 +14,7 @@ export function ProjectCard({ project }: { project: Project }) {
         <img src={project.cover} alt={project.title} loading="lazy" />
         <GradientFilterOverlay src={project.cover} />
       </div>
-      <div className={styles.label}>
-        <span className={styles.name}>{project.title}</span>
-        <span className={styles.year}>{project.year}</span>
-      </div>
+      <span className={styles.coverName}>{project.title}</span>
     </Link>
   )
 }

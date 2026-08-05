@@ -21,21 +21,17 @@
   object-fit: cover;
 }
 
-.label {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  height: 17px;
-  padding: 0 12px;
+/* Name below the cover, flush to its left edge — same typographic treatment
+   as WorkCard's .workDesc, just outside the image (static, always visible)
+   instead of overlaid on it. No year, a single line. */
+.coverName {
+  margin: 0;
   font-family: var(--font-sans);
   font-size: 14px;
+  line-height: 1;
+  letter-spacing: -0.154px;
   white-space: nowrap;
-}
-.name {
   color: var(--color-muted);
-}
-.year {
-  color: rgba(105, 95, 95, 0.5);
 }
 
 /* Artwork card 3:4 image + name */

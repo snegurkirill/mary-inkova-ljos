@@ -45,6 +45,16 @@ body {
   background: var(--color-bg);
 }
 
+/* Scroll stays fully functional (wheel/touch/keyboard/programmatic) — only
+   the scrollbar's own visible track/thumb is suppressed. */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* legacy Edge */
+}
+html::-webkit-scrollbar {
+  display: none; /* Chrome / Safari / Chromium Edge */
+}
+
 img {
   display: block;
   max-width: 100%;
