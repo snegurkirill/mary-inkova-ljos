@@ -35,11 +35,12 @@
   width: 320px;
   margin: 0;
   align-self: center;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 15px;
-  line-height: 1.4;
-  color: var(--color-muted);
+  font-family: var(--font-buira);
+  /* font-style: italic; */
+  font-size: 16px;
+  line-height: 20px;
+  /* letter-spacing: -0.5px; */
+  color: var(--color-ink);
   text-align: right;
 }
 

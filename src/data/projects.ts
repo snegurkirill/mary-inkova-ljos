@@ -9,6 +9,10 @@ import { asset } from '../lib/asset'
 
 const W = (n: number) => asset(`/content/works/${n}.png`)
 
+// Gallery-card cover: the cloud-preview collage (scripts/cloud-preview.py),
+// shared across every project for now (demo content reuses one artwork set).
+const GALLERY_PREVIEW = asset('/content/gallery-preview.jpg')
+
 const glowingFlowersArtworks = [
   { id: '1', title: 'Хлеборус и 4 лепестка', image: W(1), technique: 'Фотография, lumen print', size: '30 х 40', price: '15 000 ₽', medium: 'Photo' as const },
   { id: '2', title: 'Полярное сияние', image: W(2), technique: 'Фотография, lumen print', size: '30 х 40', price: '15 000 ₽', medium: 'Photo' as const },
@@ -28,13 +32,13 @@ const description = `«Сияющие цветы» (glowing flowers series) — 
 Работы становятся маленькими светящимися формами — цветами-маяками.`
 
 export const projects: Project[] = [
-  { slug: 'glowing-flowers', title: 'Glowing Flowers', year: '2026', cover: W(1), description, medium: 'Photo', artworks: glowingFlowersArtworks },
-  { slug: 'lucida-morgana', title: 'Lucida Morgana', year: '2025', cover: W(2), description, medium: 'Space', artworks: glowingFlowersArtworks },
-  { slug: 'sun-resonance', title: 'Sun Resonance', year: '2024', cover: W(3), description, medium: 'Photo', artworks: glowingFlowersArtworks },
-  { slug: 'polarized-world', title: 'Polarized world', year: '2023', cover: W(4), description, medium: 'Photo', artworks: glowingFlowersArtworks },
-  { slug: 'objects-of-light', title: 'Objects of Light', year: '2022', cover: W(5), description, medium: 'Space', artworks: glowingFlowersArtworks },
-  { slug: 'spirit-of-white-night', title: 'Spirit of white night', year: '2021', cover: W(6), description, medium: 'Video', artworks: glowingFlowersArtworks },
-  { slug: 'magic-optic-color', title: 'Magic Optic Color', year: '2020', cover: W(7), description, medium: 'Photo', artworks: glowingFlowersArtworks },
+  { slug: 'glowing-flowers', title: 'Glowing Flowers', year: '2026', cover: GALLERY_PREVIEW, description, medium: 'Photo', artworks: glowingFlowersArtworks },
+  { slug: 'lucida-morgana', title: 'Lucida Morgana', year: '2025', cover: GALLERY_PREVIEW, description, medium: 'Space', artworks: glowingFlowersArtworks },
+  { slug: 'sun-resonance', title: 'Sun Resonance', year: '2024', cover: GALLERY_PREVIEW, description, medium: 'Photo', artworks: glowingFlowersArtworks },
+  { slug: 'polarized-world', title: 'Polarized world', year: '2023', cover: GALLERY_PREVIEW, description, medium: 'Photo', artworks: glowingFlowersArtworks },
+  { slug: 'objects-of-light', title: 'Objects of Light', year: '2022', cover: GALLERY_PREVIEW, description, medium: 'Space', artworks: glowingFlowersArtworks },
+  { slug: 'spirit-of-white-night', title: 'Spirit of white night', year: '2021', cover: GALLERY_PREVIEW, description, medium: 'Video', artworks: glowingFlowersArtworks },
+  { slug: 'magic-optic-color', title: 'Magic Optic Color', year: '2020', cover: GALLERY_PREVIEW, description, medium: 'Photo', artworks: glowingFlowersArtworks },
 ]
 
 export function getProject(slug: string): Project | undefined {

@@ -1,21 +1,32 @@
 /* Fills the content area (which the fit-shell caps at the viewport). Image
    adapts its size to the space left above the params, so the whole page fits
    with no scroll. Desktop: image aligned to the right; mobile keeps it
-   left-aligned (set via .frameMobile). */
+   left-aligned (set via .frameMobile).
+   A single max-content grid column (not a plain full-width flex column) so
+   .frame and .meta share exactly the image's own rendered width, both
+   flush to the same edge — otherwise .meta, being full-width with no
+   knowledge of the image's actual (aspect-ratio-constrained) width, sits at
+   the page's edge instead of the image's, drifting apart from it as the
+   page grows wider than the height-capped image. */
 .page {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-content: end;
   height: 100%;
   min-height: 0;
   padding: 10px;
   box-sizing: border-box;
 }
 
+.pageMobile {
+  justify-content: start;
+}
+
 .frame {
   margin: 0;
   position: relative;
-  flex: 1 1 0;
   min-height: 0;
+  min-width: 0;
   display: flex;
   align-items: center; /* vertically centred */
   justify-content: flex-end;
@@ -53,7 +64,6 @@
 }
 
 .meta {
-  flex: 0 0 auto;
   display: flex;
   gap: 20px;
   align-items: baseline;
