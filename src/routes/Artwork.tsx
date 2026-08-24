@@ -70,7 +70,10 @@ export default function Artwork() {
   if (!project || !artwork) return <NotFound />
 
   return (
-    <section className={styles.page} data-page="artwork">
+    <section
+      className={`${styles.page} ${isMobile ? styles.pageMobile : ''}`}
+      data-page="artwork"
+    >
       <figure
         className={`${styles.frame} ${isMobile ? styles.frameMobile : ''}`}
       >

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Navigation from '../Navigation/Navigation'
 import GradientMapDefs from '../GradientFilter/GradientMapDefs'
+import CursorTrail from '../CursorTrail/CursorTrail'
 import { LayoutContext } from './LayoutContext'
 import { isArtworkPath } from '../../lib/nav'
 import { useScrollFilterState } from '../../hooks/useScrollFilterState'
@@ -50,6 +51,7 @@ export default function Layout() {
   return (
     <LayoutContext.Provider value={{ isMobile, setMinContent }}>
       <GradientMapDefs />
+      <CursorTrail />
       <div
         className={[
           styles.shell,

@@ -1,3 +1,13 @@
+/* Self-hosted (not on npm, unlike Inter via @fontsource) — used for the Home
+   page poem. */
+@font-face {
+  font-family: 'Buira';
+  src: url('../assets/fonts/buira.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   /* Spacing */
   --page-margin: 32px;
@@ -19,6 +29,7 @@
   --font-serif: Georgia, 'Times New Roman', 'Times', serif;
   --font-sans: 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial,
     sans-serif;
+  --font-buira: 'Buira', var(--font-serif);
 
   font-family: var(--font-sans);
   color: var(--color-black);
